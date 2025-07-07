@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Index</title>
-</head>
-<body>
-    <h1>It Works!</h1>
-    <?php echo('Hallo WT\'er, de webserver is online en PHP werkt.'); ?>
-    <br>
-    <br>
-    Alle technische informatie over je webserver vind je hier: <a href="phpinfo.php">http://<?=$_SERVER['HTTP_HOST']?>/phpinfo.php</a>
-    <br>
-    <br>
-    Een voorbeeld van een pagina die gegevens uit de database haalt vind je hier: <a href="componist-aantalstukken.php">http://<?=$_SERVER['HTTP_HOST']?>/componist-aantalstukken.php</a>
-</body>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" type="image/x-icon" href="/assets/icons/favicon.ico">
+        <title>Index</title>
+    </head>
+    <body>
+        <p><?php // Account system
+            session_start();
+            if (empty($_SESSION['username'])) echo("U bent uitgelogd. Klik <a href=\"/login\">hier</a> om in te loggen.");
+            else echo("U bent ingelogd als " . $_SESSION['first_name'] . " " . $_SESSION['last_name'] . ". <a href=\"/logout\">Log uit</a>.")
+        ?></p>
+        <h1>It Works!</h1>
+    </body>
 </html>
+
