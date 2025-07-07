@@ -1,8 +1,8 @@
 <?php
-require_once 'db_connectie.php';
+require_once 'util/database.php';
 
 // maak verbinding met de database (zie db_connection.php)
-$db = maakVerbinding();
+$db = getDatabaseConnection();
 
 // haal alle componisten op en tel het aantal stukken
 $query = 'select c.componistId as id, c.naam as naam, count(S.stuknr) as aantal
