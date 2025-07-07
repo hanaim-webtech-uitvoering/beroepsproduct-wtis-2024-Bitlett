@@ -1,3 +1,5 @@
+<?php session_start(); ?>
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -9,8 +11,8 @@
     </head>
     <body>
         <h1>Account Registreren</h1>
+        <?php require_once '../header.php' ?>
         <?php
-            session_start();
             if (isset($_SESSION['errors'])) {
                 foreach ($_SESSION['errors'] as $error) echo("<p style=\"color:red;\">" . $error . "</p><br>");
                 unset($_SESSION['errors']);

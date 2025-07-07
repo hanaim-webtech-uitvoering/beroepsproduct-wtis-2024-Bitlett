@@ -51,6 +51,8 @@ function get_username_availability($username): bool {
 
 // Account functions
 function register_new_client($username, $password, $first_name, $last_name, $address = NULL): ?string {
+	$adress = empty($adress) ? NULL : $adress;
+	
 	$username_validity_error = is_username_valid($username); if ($username_validity_error != NULL) return $username_validity_error;
 	if (!get_username_availability($username)) return "Gebruikersnaam al bezet!";
 	$password_validity_error = is_password_valid($password); if ($password_validity_error != NULL) return $password_validity_error;

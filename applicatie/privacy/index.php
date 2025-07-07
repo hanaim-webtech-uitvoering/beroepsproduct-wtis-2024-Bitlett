@@ -7,11 +7,12 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="icon" type="image/x-icon" href="/assets/icons/favicon.ico">
-        <title>Index</title>
+        <title>Privacyverklaring</title>
     </head>
     <body>
-        <h1>Pizzeria Sole Machina 🍕</h1>
-        <?php require_once 'header.php' ?>
+        <h1>Privacyverklaring</h1>
+        <?php require_once '../header.php' ?>
+		<p>Hier hoort een verplichte privacyverklaring te staan (GDPR)</p>
     </body>
 </html>
 

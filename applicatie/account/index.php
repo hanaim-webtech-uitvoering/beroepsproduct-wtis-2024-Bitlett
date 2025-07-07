@@ -10,8 +10,13 @@
         <title>Index</title>
     </head>
     <body>
-        <h1>Pizzeria Sole Machina 🍕</h1>
-        <?php require_once 'header.php' ?>
+        <h1>Account</h1>
+		<?php require_once '../header.php' ?>
+        <p><?php // Account system
+            if (empty($_SESSION['username'])) echo("U bent uitgelogd. Klik <a href=\"/login\">hier</a> om in te loggen.");
+            else echo("U bent ingelogd als " . get_clean_full_name() . ". <a href=\"/logout\">Log uit</a>.")
+        ?></p>
+        
     </body>
 </html>
 
