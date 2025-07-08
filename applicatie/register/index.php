@@ -1,4 +1,9 @@
-<?php session_start(); ?>
+<?php
+
+require "../common/errors.php"; 
+
+?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -11,8 +16,8 @@
     </head>
     <body>
         <h1>Account Registreren</h1>
-        <?php include '../header.php'; ?>
-        <?php include '../util/errors.php'; foreach (get_errors() as $error) echo(get_error_element($error)); clear_errors(); ?>
+        <?php require "../common/header.php"; ?>
+        <?php echo(get_error_elements()); clear_errors(); ?>
         <form action="/register/submit.php" method="post">
 			<label>Gebruikersnaam:</label> <input type="text" name="username" required><br><br>
 			<label>Wachtwoord:</label> <input type="password" name="password" required><br><br>

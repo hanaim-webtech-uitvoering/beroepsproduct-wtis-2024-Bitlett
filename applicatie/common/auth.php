@@ -86,7 +86,7 @@ function register_new_client(mixed $username, mixed $password, mixed $first_name
 	$address = empty($address) ? NULL : $address;
 	
 	$username_validity_error = is_username_valid($username); if ($username_validity_error != NULL) return $username_validity_error;
-	if (!get_username_availability($username)) return "Gebruikersnaam is al bezet!";
+	if (!fetch_username_availability($username)) return "Gebruikersnaam is al bezet!";
 	$password_validity_error = is_password_valid($password); if ($password_validity_error != NULL) return $password_validity_error;
 	$first_name_validity_error = is_first_name_valid($first_name); if ($first_name_validity_error != NULL) return $first_name_validity_error;
 	$last_name_validity_error = is_last_name_valid($last_name); if ($last_name_validity_error != NULL) return $last_name_validity_error;

@@ -12,10 +12,10 @@ require "../common/auth.php";
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="icon" type="image/x-icon" href="/assets/icons/favicon.ico">
-        <title>Index</title>
+        <title>Profiel</title>
     </head>
     <body>
-        <h1>Account</h1>
+        <h1>Profiel</h1>
 		<?php require '../common/header.php' ?>
         <p><?php // Account system
             if (get_login_status()) echo("U bent ingelogd als " . get_clean_full_name() . ". <a href=\"/logout\">Log uit</a>.");

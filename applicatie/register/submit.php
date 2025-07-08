@@ -1,13 +1,9 @@
 <?php
 
-// Start session
-if (session_status() === PHP_SESSION_NONE) session_start();
-
 // Includes
-require 'funcs.php';
-require '../login/funcs.php';
-require '../util/errors.php';
-require '../util/redirect.php';
+require '../common/auth.php';
+require '../common/errors.php';
+require '../common/redirect.php';
 
 // Method check
 if ($_SERVER["REQUEST_METHOD"] != "POST") redirect("/register");
