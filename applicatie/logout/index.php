@@ -1,16 +1,14 @@
 <?php
 
 // Includes
-require_once 'funcs.php';
-
-
-// Start session
-session_start();
-
+require "../common/auth.php";
+require "../common/redirect.php";
 
 // Log out
 logout();
-header('Location: /');
+
+// Back to home page
+redirect("/");
 
 ?>
 

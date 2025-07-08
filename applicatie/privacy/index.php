@@ -1,5 +1,3 @@
-<?php session_start(); ?>
-
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -11,7 +9,7 @@
     </head>
     <body>
         <h1>Privacyverklaring</h1>
-        <?php require_once '../header.php' ?>
+        <?php require '../common/header.php' ?>
 		<p>Hier hoort een verplichte privacyverklaring te staan (GDPR)</p>
     </body>
 </html>

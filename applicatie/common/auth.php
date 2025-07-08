@@ -44,6 +44,10 @@ function is_address_valid(mixed $address): ?string {
 
 
 // Data getting functions
+function get_login_status(): bool {
+	return !empty($_SESSION['username']);
+}
+
 function get_clean_full_name(): ?string {
 	if (empty($_SESSION['username'])) return NULL;
 	return htmlspecialchars(strip_tags($_SESSION['first_name'])) . " " . htmlspecialchars(strip_tags($_SESSION['last_name']));
@@ -98,16 +102,23 @@ function register_new_client(mixed $username, mixed $password, mixed $first_name
 
 // Login functions
 function login($username, $password): ?string {
-	$login_validity_error = get_login_validity($username, $password); if ($login_validity_error != NULL) return $login_validity_error;
+	$login_validity_error = fetch_login_validity($username, $password); if ($login_validity_error != NULL) return $login_validity_error;
 
-	session_start();
-	$user_data = get_user_data($username);
+	$user_data = fetch_user_data($username);
 	$_SESSION["username"] = $user_data['username'];
 	$_SESSION["first_name"] = $user_data['first_name'];
 	$_SESSION["last_name"] = $user_data['last_name'];
 	$_SESSION["role"] = $user_data['role'];
 	$_SESSION["address"] = $user_data['address'];
 	return NULL;
+}
+
+function logout(): void {
+	unset($_SESSION["username"]);
+	unset($_SESSION["first_name"]);
+	unset($_SESSION["last_name"]);
+	unset($_SESSION["role"]);
+	unset($_SESSION["address"]);
 }
 
 ?>

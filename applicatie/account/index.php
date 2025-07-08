@@ -1,4 +1,9 @@
-<?php session_start(); ?>
+<?php
+
+require "../common/auth.php";
+
+?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -11,10 +16,10 @@
     </head>
     <body>
         <h1>Account</h1>
-		<?php require_once '../header.php' ?>
+		<?php require '../common/header.php' ?>
         <p><?php // Account system
-            if (empty($_SESSION['username'])) echo("U bent uitgelogd. Klik <a href=\"/login\">hier</a> om in te loggen.");
-            else echo("U bent ingelogd als " . get_clean_full_name() . ". <a href=\"/logout\">Log uit</a>.")
+            if (get_login_status()) echo("U bent ingelogd als " . get_clean_full_name() . ". <a href=\"/logout\">Log uit</a>.");
+            else echo("U bent uitgelogd. Klik <a href=\"/login\">hier</a> om in te loggen.");
         ?></p>
         
     </body>
