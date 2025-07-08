@@ -2,6 +2,8 @@
 
 require_once "../common/products.php";
 require_once "../common/cart.php";
+require_once "../common/auth.php";
+require_once "../common/errors.php";
 
 ?>
 
@@ -54,8 +56,11 @@ require_once "../common/cart.php";
 		?>
 
 		<h2>Bestellen</h2>
+		<?php echo(get_error_elements()); clear_errors(); ?>
 		<form action="/menu/order.php" method="post">
-			<label>Adres:</label> <input type="text" name="address" value="" . (empty($_SESSION["address"]) ? "Onbekend" : sanitize_user_input($_SESSION["address"])) . "\"> <input type=\"submit\" value=\"Aanpassen\">
+			<label>Adres:</label> <input type="text" name="address" value="<?php if (get_login_status()) echo(sanitize_user_input($_SESSION["address"])) ?>"> <br><br>
+			<input type="submit" value="Bestellen">
+		</form>
 		
     </body>
 </html>

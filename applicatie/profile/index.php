@@ -33,7 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] != "GET") redirect("/");
                     <p>Gebruikersnaam: " . sanitize_user_input($_SESSION["username"]) . "</p>
                     <p>Rol: " . sanitize_user_input($_SESSION["role"]) . "</p>
                     " . get_error_elements() . "
-                    <form action=\"/profile/edit.php\" method=\"post\"> <label>Adres:</label> <input type=\"text\" name=\"address\" value=\"" . (empty($_SESSION["address"]) ? "Onbekend" : sanitize_user_input($_SESSION["address"])) . "\"> <input type=\"submit\" value=\"Aanpassen\"><br><br>
+                    <form action=\"/profile/edit.php\" method=\"post\"> <label>Adres:</label> <input type=\"text\" name=\"address\" value=\"" . (empty($_SESSION["address"]) ? "Onbekend" : sanitize_user_input($_SESSION["address"])) . "\"> <input type=\"submit\" value=\"Aanpassen\"> </form><br><br>
                     <a href=\"/profile/delete_account.php\">Verwijder Account</a>
 
                     <h2>Mijn Bestellingen</h2>
