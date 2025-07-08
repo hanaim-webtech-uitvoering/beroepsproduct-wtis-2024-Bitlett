@@ -1,5 +1,10 @@
-<?php session_start(); ?>
-<?php require_once 'funcs.php' ?>
+<?php
+
+require_once '../common/products.php';
+require_once '../common/cart.php';
+
+?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -12,22 +17,30 @@
     </head>
     <body>
         <h1>Menu</h1>
-		<?php require_once '../header.php' ?>
+		<?php require '../common/header.php' ?>
 
 		<?php
-			foreach (get_menu_categories() as $category) {
-				echo("<h2>" . $category . "</h2>
+			$products = fetch_products();
+
+			$products_by_type_id = [];
+			foreach ($products as $product) {
+				if (!isset($products_by_type_id[$product["type_id"]])) $products_by_type_id[$product["type_id"]] = [];
+				$products_by_type_id[$product["type_id"]][count($products_by_type_id[$product["type_id"]])] = $product;
+			}
+
+			foreach ($products_by_type_id as $type_id => $products) {
+				echo("<h2>" . $type_id . "</h2>
 					<table>
 						<tr> <th>Product</th> <th>Ingrediënten</th> <th>Prijs</th> <th>Aantal</th> </tr>");
 
-				foreach (get_menu_products($category) as $product) {
+				foreach ($products as $product) {
 					$ingredients_string = "";
 					foreach ($product['ingredients'] as $ingredient) {
 						if (!empty($ingredients_string)) $ingredients_string .= ", ";
 						$ingredients_string .= $ingredient;
 					}
 
-					echo("<tr> <td>" . $product['name'] . "</td> <td>" . $ingredients_string . "</td> <td>€" . $product['price'] . "</td> <td><a href=\"/menu/edit.php?origin=/menu&product=" . $product['name'] . "&action=remove\">-</a> " . get_cart_product_count($product['name']) . " <a href=\"/menu/edit.php?origin=/menu&product=" . $product['name'] . "&action=add\">+</a></td> </tr>");
+					echo("<tr> <td>" . $product['name'] . "</td> <td>" . $ingredients_string . "</td> <td>€" . $product['price'] . "</td> <td><a href=\"/menu/edit.php?origin=/menu&product_name=" . $product['name'] . "&action=remove\">-</a> " . get_cart_product_quantity($product['name']) . " <a href=\"/menu/edit.php?origin=/menu&product_name=" . $product['name'] . "&action=add\">+</a></td> </tr>");
 				}
 
 				echo("</table>");

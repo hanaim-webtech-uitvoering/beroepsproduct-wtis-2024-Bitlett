@@ -11,13 +11,8 @@
     </head>
     <body>
         <h1>Account Registreren</h1>
-        <?php require_once '../header.php' ?>
-        <?php
-            if (isset($_SESSION['errors'])) {
-                foreach ($_SESSION['errors'] as $error) echo("<p style=\"color:red;\">" . $error . "</p><br>");
-                unset($_SESSION['errors']);
-            }
-        ?>
+        <?php include '../header.php'; ?>
+        <?php include '../util/errors.php'; foreach (get_errors() as $error) echo(get_error_element($error)); clear_errors(); ?>
         <form action="/register/submit.php" method="post">
 			<label>Gebruikersnaam:</label> <input type="text" name="username" required><br><br>
 			<label>Wachtwoord:</label> <input type="password" name="password" required><br><br>
