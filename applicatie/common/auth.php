@@ -48,11 +48,6 @@ function get_login_status(): bool {
 	return !empty($_SESSION['username']);
 }
 
-function get_clean_full_name(): ?string {
-	if (empty($_SESSION['username'])) return NULL;
-	return htmlspecialchars(strip_tags($_SESSION['first_name'])) . " " . htmlspecialchars(strip_tags($_SESSION['last_name']));
-}
-
 
 // Data fetching functions
 function fetch_username_availability(mixed $username): bool {
@@ -99,6 +94,12 @@ function register_new_client(mixed $username, mixed $password, mixed $first_name
 	return NULL;
 }
 
+function delete_client(string $username) : void {
+	$database_connection = get_database_connection();
+	$register_query = $database_connection->prepare("DELETE FROM \"User\" WHERE username = :username");
+	$register_query->execute([":username" => $username]);
+}
+
 
 // Login functions
 function login($username, $password): ?string {
@@ -119,6 +120,20 @@ function logout(): void {
 	unset($_SESSION["last_name"]);
 	unset($_SESSION["role"]);
 	unset($_SESSION["address"]);
+}
+
+
+// Updating functions
+function set_user_address(string $username, mixed $address): ?string {
+	$address = empty($address) ? NULL : $address;
+
+	$address_validity_error = is_address_valid($address); if ($address_validity_error != NULL) return $address_validity_error;
+
+	$database_connection = get_database_connection();
+	$register_query = $database_connection->prepare("UPDATE \"User\" SET address = :address WHERE username = :username");
+	$register_query->execute([":address" => $address, ":username" => $username]);
+
+	return NULL;
 }
 
 ?>

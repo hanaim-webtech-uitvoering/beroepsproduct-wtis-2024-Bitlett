@@ -2,13 +2,11 @@
 
 // Includes
 require "../common/auth.php";
+require "../common/errors.php";
 require "../common/redirect.php";
-
 
 // Method check
 if ($_SERVER["REQUEST_METHOD"] != "POST") redirect("/login");
-
-
 
 // Login
 $login_error = login($_POST['username'], $_POST['password']);

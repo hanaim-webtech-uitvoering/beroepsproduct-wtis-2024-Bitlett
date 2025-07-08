@@ -3,14 +3,7 @@
 // Includes
 require_once "../common/cart.php";
 
-// Start session
-if (session_status() === PHP_SESSION_NONE) session_start();
-
-
 // Do the thing (im tired okay give me a break)
-$origin = isset($_GET["origin"]) ? $_GET["origin"] : "/";
-header("Location: " . $origin);
-
 if (!isset($_GET["product_name"])) exit();
 if (!isset($_GET["action"])) exit();
 

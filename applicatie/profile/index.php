@@ -1,6 +1,13 @@
 <?php
 
 require "../common/auth.php";
+require "../common/errors.php";
+
+?>
+
+<?php
+
+if ($_SERVER["REQUEST_METHOD"] != "GET") redirect("/");
 
 ?>
 
@@ -18,8 +25,22 @@ require "../common/auth.php";
         <h1>Profiel</h1>
 		<?php require '../common/header.php' ?>
         <p><?php // Account system
-            if (get_login_status()) echo("U bent ingelogd als " . get_clean_full_name() . ". <a href=\"/logout\">Log uit</a>.");
-            else echo("U bent uitgelogd. Klik <a href=\"/login\">hier</a> om in te loggen.");
+            if (!get_login_status()) echo("U bent uitgelogd. Klik <a href=\"/login\">hier</a> om in te loggen.");
+            else {
+                echo("
+                    <h2>Algemene Gegevens</h2>
+                    <p>Naam: " . sanitize_user_input($_SESSION["first_name"] . " " . $_SESSION["last_name"]) . "</p>
+                    <p>Gebruikersnaam: " . sanitize_user_input($_SESSION["username"]) . "</p>
+                    <p>Rol: " . sanitize_user_input($_SESSION["role"]) . "</p>
+                    " . get_error_elements() . "
+                    <form action=\"/profile/edit.php\" method=\"post\"> <label>Adres:</label> <input type=\"text\" name=\"address\" value=\"" . (empty($_SESSION["address"]) ? "Onbekend" : sanitize_user_input($_SESSION["address"])) . "\"> <input type=\"submit\" value=\"Aanpassen\"><br><br>
+                    <a href=\"/profile/delete_account.php\">Verwijder Account</a>
+
+                    <h2>Mijn Bestellingen</h2>
+                ");
+
+                clear_errors();
+            }
         ?></p>
         
     </body>

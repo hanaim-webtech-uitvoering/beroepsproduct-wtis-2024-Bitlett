@@ -52,6 +52,10 @@ require_once "../common/cart.php";
 				echo("</table>");
 			}
 		?>
+
+		<h2>Bestellen</h2>
+		<form action="/menu/order.php" method="post">
+			<label>Adres:</label> <input type="text" name="address" value="" . (empty($_SESSION["address"]) ? "Onbekend" : sanitize_user_input($_SESSION["address"])) . "\"> <input type=\"submit\" value=\"Aanpassen\">
 		
     </body>
 </html>
