@@ -1,7 +1,7 @@
 <?php
 
-require_once '../common/products.php';
-require_once '../common/cart.php';
+require_once "../common/products.php";
+require_once "../common/cart.php";
 
 ?>
 
@@ -17,7 +17,7 @@ require_once '../common/cart.php';
     </head>
     <body>
         <h1>Menu</h1>
-		<?php require '../common/header.php' ?>
+		<?php require "../common/header.php" ?>
 
 		<?php
 			$products = fetch_products();
@@ -27,6 +27,12 @@ require_once '../common/cart.php';
 				if (!isset($products_by_type_id[$product["type_id"]])) $products_by_type_id[$product["type_id"]] = [];
 				$products_by_type_id[$product["type_id"]][count($products_by_type_id[$product["type_id"]])] = $product;
 			}
+
+			$cart_product_order_quantity_by_name = [];
+			foreach ($products as $product)
+				$cart_product_order_quantity_by_name[$product["name"]] = 0;
+			foreach ($_SESSION["cart"] as $product_order)
+				$cart_product_order_quantity_by_name[$product_order["product"]["name"]] = $product_order["quantity"];
 
 			foreach ($products_by_type_id as $type_id => $products) {
 				echo("<h2>" . $type_id . "</h2>
@@ -40,7 +46,7 @@ require_once '../common/cart.php';
 						$ingredients_string .= $ingredient;
 					}
 
-					echo("<tr> <td>" . $product['name'] . "</td> <td>" . $ingredients_string . "</td> <td>€" . $product['price'] . "</td> <td><a href=\"/menu/edit.php?origin=/menu&product_name=" . $product['name'] . "&action=remove\">-</a> " . get_cart_product_quantity($product['name']) . " <a href=\"/menu/edit.php?origin=/menu&product_name=" . $product['name'] . "&action=add\">+</a></td> </tr>");
+					echo("<tr> <td>" . $product['name'] . "</td> <td>" . $ingredients_string . "</td> <td>€" . $product['price'] . "</td> <td><a href=\"/menu/edit.php?origin=/menu&product_name=" . $product['name'] . "&action=remove\">-</a> " . $cart_product_order_quantity_by_name[$product['name']] . " <a href=\"/menu/edit.php?origin=/menu&product_name=" . $product['name'] . "&action=add\">+</a></td> </tr>");
 				}
 
 				echo("</table>");

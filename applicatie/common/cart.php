@@ -13,42 +13,46 @@ if (!isset($_SESSION["cart"])) $_SESSION["cart"] = [];
 // Cart functions
 function get_cart_size(): int {
 	$total = 0;
-	foreach ($_SESSION["cart"] as $product_name => $product_quantity) $total += $product_quantity;
+	foreach ($_SESSION["cart"] as $product_order) $total += $product_order["quantity"];
 	return $total;
 }
 
-function get_cart_cost(): float {
-	$products = fetch_products();
-
-	$product_prices_by_name = [];
-	foreach ($products as $product) $product_prices_by_name[$product["name"]] = $product["price"];
-
+function get_cart_price(): float {
 	$total = 0;
-	foreach ($_SESSION["cart"] as $product_name => $product_quantity) $total += $product_quantity * $product_prices_by_name[$product_name];
-
+	foreach ($_SESSION["cart"] as $product_order) $total += $product_order["quantity"] * $product_order["product"]["price"];
 	return $total;
-}
-
-function get_cart_product_quantity(string $product): int {
-	return isset($_SESSION["cart"][$product]) ? $_SESSION["cart"][$product] : 0;
 }
 
 function add_cart_product(string $name): bool {
-	if (fetch_product($name) == NULL) {
-		unset($_SESSION["cart"][$name]);
-		return FALSE;
-	}
+	$product = fetch_product($name);
+	if (is_null($product)) return FALSE;
 
-	if (!isset($_SESSION["cart"][$name])) $_SESSION["cart"][$name] = 0;
+	foreach ($_SESSION["cart"] as &$product_order)
+		if ($product_order["product"] == $product) {
+			$product_order["quantity"] += 1;
+			return TRUE;
+		}
 
-	$_SESSION["cart"][$name] += 1;
+	$_SESSION["cart"][count($_SESSION["cart"])] = [
+		"product" => $product,
+		"quantity" => 1
+	];
+
 	return TRUE;
 }
 
 function remove_cart_product(string $name): bool {
-	if (!isset($_SESSION["cart"][$name])) return FALSE;
-	if ($_SESSION["cart"][$name] == 0) return FALSE;
-	$_SESSION["cart"][$name] -= 1; return TRUE;
+	$product = fetch_product($name);
+	if (is_null($product)) return FALSE;
+
+	foreach ($_SESSION["cart"] as &$product_order)
+		if ($product_order["product"] == $product) {
+			if ($product_order["quantity"] == 0) return FALSE;
+			$product_order["quantity"] -= 1; // This doesn't actually edit the cart??
+			return TRUE;
+		}
+
+	return FALSE;
 }
 
 function clear_cart(): void {
@@ -57,10 +61,19 @@ function clear_cart(): void {
 
 function clean_cart(): void {
 	$products = fetch_products();
-	$product_names = []; foreach ($products as $product) $product_names[count($product_names)] = $product["name"];
+	$cleaned_cart = [];
 
-	foreach ($_SESSION["cart"] as $cart_product_name => $cart_product_quantity)
-		if (!in_array($cart_product_name, $product_names)) unset($_SESSION["cart"][$cart_product_name]);
+	foreach ($_SESSION["cart"] as $product_order) {
+		// First get rid of all the empty product orders
+		if ($product_order["quantity"] == 0) continue;
+
+		// Then check for product validity on each one
+		if (!in_array($product_order["product"], $products)) continue;
+		
+		$cleaned_cart[count($cleaned_cart)] = $product_order;
+	}
+
+	$_SESSION["cart"] = $cleaned_cart;
 }
 
 ?>
