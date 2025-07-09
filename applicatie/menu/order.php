@@ -15,10 +15,18 @@ $user = $session->get_user();
 // Place the order
 $order_error = $cart->order($_POST["address"], is_null($user) ? NULL : $user->get_username(), is_null($user) ? "Onbekend" : $user->get_username());
 
+unset($cart);
+unset($user);
+
 if (!is_null($order_error)) {
 	$session->push_error($order_error);
+	unset($session);
+	unset($order_error);
 	redirect("/menu");
 }
+
+unset($session);
+unset($order_error);
 
 // And go back to the menu
 redirect("/menu/order_success.php");

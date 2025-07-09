@@ -12,7 +12,6 @@
 		<?php require __DIR__ . "/../common/elem/header.php" ?>
 
 		<?php
-			$cart = Session::get()->get_cart();
 			$products = Product::fetch_all();
 
 			$products_by_type_id = [];
@@ -21,10 +20,11 @@
 				$products_by_type_id[$product->get_type_id()][count($products_by_type_id[$product->get_type_id()])] = $product;
 			}
 
+			unset($products);
+
 			foreach ($products_by_type_id as $type_id => $products) {
-				echo("<h2>" . $type_id . "</h2>
-					<table>
-						<tr> <th>Product</th> <th>Ingrediënten</th> <th>Prijs</th> <th>Aantal</th> </tr>");
+				echo("<h2>" . $type_id . "</h2>");
+				echo("<table> <tr> <th>Product</th> <th>Ingrediënten</th> <th>Prijs</th> <th>Aantal</th> </tr>")
 
 				foreach ($products as $product) {
 					$ingredients_string = "";
@@ -33,11 +33,25 @@
 						$ingredients_string .= $ingredient;
 					}
 
-					echo("<tr> <td>" . $product->get_name() . "</td> <td>" . $ingredients_string . "</td> <td>€" . $product->get_price() . "</td> <td><a href=\"/menu/edit.php?origin=/menu&product_name=" . $product->get_name() . "&action=remove\">-</a> " . $cart->get_product_quantity($product) . " <a href=\"/menu/edit.php?origin=/menu&product_name=" . $product->get_name() . "&action=add\">+</a></td> </tr>");
+					echo("<tr>");
+
+					echo("<td>" . $product->get_name() . "</td>");
+					echo("<td>" . $ingredients_string . "</td>");
+					echo("<td>€" . $product->get_price() . "</td>");
+
+					echo("<td>");
+					echo("<a href=\"/menu/edit.php?origin=/menu&product_name=" . $product->get_name() . "&action=remove\">-</a> ");
+					echo(Session::get()->get_cart()->get_product_quantity($product));
+					echo(" <a href=\"/menu/edit.php?origin=/menu&product_name=" . $product->get_name() . "&action=add\">+</a>");
+					echo("</td>")
+
+					echo("</tr>");
 				}
 
 				echo("</table>");
 			}
+
+			unset($products_by_type_id);
 		?>
 
 		<h2>Bestellen</h2>

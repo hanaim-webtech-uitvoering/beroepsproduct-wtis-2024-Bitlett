@@ -9,7 +9,7 @@ require_once __DIR__ . "/WebError.php";
 
 // Always have an active session
 if (session_status() === PHP_SESSION_NONE) session_start();
-if (is_null($_SESSION["data"])) $_SESSION["data"] = new Session();
+if (!isset($_SESSION["data"])) $_SESSION["data"] = new Session();
 
 
 class Session {

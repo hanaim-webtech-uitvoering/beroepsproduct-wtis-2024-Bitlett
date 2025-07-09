@@ -12,8 +12,11 @@ $login_error = Session::get()->login($_POST['username'], $_POST['password']);
 
 if (!is_null($login_error)) {
 	Session::get()->push_error($login_error);
+	unset($login_error);
 	redirect("/login");
 }
+
+unset($login_error);
 
 // Go back to homepage
 redirect("/");
