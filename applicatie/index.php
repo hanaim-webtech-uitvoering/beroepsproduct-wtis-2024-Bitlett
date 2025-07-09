@@ -9,7 +9,7 @@
     </head>
     <body>
         <h1>Pizzeria Sole Machina 🍕</h1>
-        <?php require 'common/header.php' ?>
+        <?php require __DIR__ . "/common/elem/header.php" ?>
     </body>
 </html>
 

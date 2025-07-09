@@ -1,13 +1,3 @@
-<?php
-
-require_once "../common/products.php";
-require_once "../common/cart.php";
-require_once "../common/auth.php";
-require_once "../common/errors.php";
-
-?>
-
-
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -19,22 +9,17 @@ require_once "../common/errors.php";
     </head>
     <body>
         <h1>Menu</h1>
-		<?php require "../common/header.php" ?>
+		<?php require __DIR__ . "/../common/elem/header.php" ?>
 
 		<?php
-			$products = fetch_products();
+			$cart = Session::get()->get_cart();
+			$products = Product::fetch_all();
 
 			$products_by_type_id = [];
 			foreach ($products as $product) {
-				if (!isset($products_by_type_id[$product["type_id"]])) $products_by_type_id[$product["type_id"]] = [];
-				$products_by_type_id[$product["type_id"]][count($products_by_type_id[$product["type_id"]])] = $product;
+				if (!isset($products_by_type_id[$product->get_type_id()])) $products_by_type_id[$product->get_type_id()] = [];
+				$products_by_type_id[$product->get_type_id()][count($products_by_type_id[$product->get_type_id()])] = $product;
 			}
-
-			$cart_product_order_quantity_by_name = [];
-			foreach ($products as $product)
-				$cart_product_order_quantity_by_name[$product["name"]] = 0;
-			foreach ($_SESSION["cart"] as $product_order)
-				$cart_product_order_quantity_by_name[$product_order["product"]["name"]] = $product_order["quantity"];
 
 			foreach ($products_by_type_id as $type_id => $products) {
 				echo("<h2>" . $type_id . "</h2>
@@ -43,12 +28,12 @@ require_once "../common/errors.php";
 
 				foreach ($products as $product) {
 					$ingredients_string = "";
-					foreach ($product['ingredients'] as $ingredient) {
+					foreach ($product->get_ingredients() as $ingredient) {
 						if (!empty($ingredients_string)) $ingredients_string .= ", ";
 						$ingredients_string .= $ingredient;
 					}
 
-					echo("<tr> <td>" . $product['name'] . "</td> <td>" . $ingredients_string . "</td> <td>€" . $product['price'] . "</td> <td><a href=\"/menu/edit.php?origin=/menu&product_name=" . $product['name'] . "&action=remove\">-</a> " . $cart_product_order_quantity_by_name[$product['name']] . " <a href=\"/menu/edit.php?origin=/menu&product_name=" . $product['name'] . "&action=add\">+</a></td> </tr>");
+					echo("<tr> <td>" . $product->get_name() . "</td> <td>" . $ingredients_string . "</td> <td>€" . $product->get_price() . "</td> <td><a href=\"/menu/edit.php?origin=/menu&product_name=" . $product->get_name() . "&action=remove\">-</a> " . $cart->get_product_quantity($product) . " <a href=\"/menu/edit.php?origin=/menu&product_name=" . $product->get_name() . "&action=add\">+</a></td> </tr>");
 				}
 
 				echo("</table>");
@@ -56,9 +41,10 @@ require_once "../common/errors.php";
 		?>
 
 		<h2>Bestellen</h2>
-		<?php echo(get_error_elements()); clear_errors(); ?>
+		<?php foreach (Session::get()->get_errors() as $error) echo($error->get_element()); Session::get()->clear_errors(); ?>
+
 		<form action="/menu/order.php" method="post">
-			<label>Adres:</label> <input type="text" name="address" value="<?php if (get_login_status()) echo(sanitize_user_input($_SESSION["address"])) ?>"> <br><br>
+			<label>Adres:</label> <input type="text" name="address" value="<?php if (!is_null(Session::get()->get_user()) && !is_null(Session::get()->get_user()->get_address())) echo(Session::sanitize_user_input(Session::get()->get_user()->get_address())); ?>" required> <br><br>
 			<input type="submit" value="Bestellen">
 		</form>
 		

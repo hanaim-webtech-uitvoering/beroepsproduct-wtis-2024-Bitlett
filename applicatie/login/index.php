@@ -1,11 +1,3 @@
-<?php
-
-require "../common/auth.php";
-require "../common/errors.php";
-
-?>
-
-
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -17,8 +9,10 @@ require "../common/errors.php";
     </head>
     <body>
         <h1>Inloggen</h1>
-        <?php require_once '../common/header.php' ?>
-        <?php echo(get_error_elements()); clear_errors(); ?>
+        <?php require __DIR__ . "/../common/elem/header.php" ?>
+
+        <?php foreach (Session::get()->get_errors() as $error) echo($error->get_element()); Session::get()->clear_errors(); ?>
+
         <form action="/login/submit.php" method="post">
 			<label>Gebruikersnaam:</label> <input type="text" name="username" required><br><br>
 			<label>Wachtwoord:</label> <input type="password" name="password" required><br><br>

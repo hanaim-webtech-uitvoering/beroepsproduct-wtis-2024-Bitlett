@@ -1,17 +1,3 @@
-<?php
-
-require "../common/auth.php";
-require "../common/errors.php";
-
-?>
-
-<?php
-
-if ($_SERVER["REQUEST_METHOD"] != "GET") redirect("/");
-
-?>
-
-
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -23,25 +9,28 @@ if ($_SERVER["REQUEST_METHOD"] != "GET") redirect("/");
     </head>
     <body>
         <h1>Profiel</h1>
-		<?php require '../common/header.php' ?>
-        <p><?php // Account system
-            if (!get_login_status()) echo("U bent uitgelogd. Klik <a href=\"/login\">hier</a> om in te loggen.");
+		<?php require __DIR__ . "/../common/elem/header.php" ?>
+
+        <?php // Account system
+            $session = &Session::get();
+            $user = $session->get_user();
+
+            if (is_null($user)) echo("U bent uitgelogd. Klik <a href=\"/login\">hier</a> om in te loggen.");
             else {
-                echo("
-                    <h2>Algemene Gegevens</h2>
-                    <p>Naam: " . sanitize_user_input($_SESSION["first_name"] . " " . $_SESSION["last_name"]) . "</p>
-                    <p>Gebruikersnaam: " . sanitize_user_input($_SESSION["username"]) . "</p>
-                    <p>Rol: " . sanitize_user_input($_SESSION["role"]) . "</p>
-                    " . get_error_elements() . "
-                    <form action=\"/profile/edit.php\" method=\"post\"> <label>Adres:</label> <input type=\"text\" name=\"address\" value=\"" . (empty($_SESSION["address"]) ? "Onbekend" : sanitize_user_input($_SESSION["address"])) . "\"> <input type=\"submit\" value=\"Aanpassen\"> </form><br><br>
-                    <a href=\"/profile/delete_account.php\">Verwijder Account</a>
+                echo("<h2>Algemene Gegevens</h2>");
+                echo("<p>Naam: " . Session::sanitize_user_input($user->get_full_name()) . "</p>");
+                echo("<p>Gebruikersnaam: " . Session::sanitize_user_input($user->get_username()) . "</p>");
+                echo("<p>Rol: " . Session::sanitize_user_input($user->get_role()) . "</p>");
+ 
+                foreach($session->get_errors() as $error) echo($error->get_element());
+                $session->clear_errors();
+                    
+                echo("<form action=\"/profile/edit.php\" method=\"post\"> <label>Adres:</label> <input type=\"text\" name=\"address\" value=\"" . (empty($user->get_address()) ? "Onbekend" : Session::sanitize_user_input($user->get_address())) . "\"> <input type=\"submit\" value=\"Aanpassen\"> </form><br><br>");
+                echo("<a href=\"/profile/delete.php\">Verwijder Account</a>");
 
-                    <h2>Mijn Bestellingen</h2>
-                ");
-
-                clear_errors();
+                echo("<h2>Mijn Bestellingen</h2>");
             }
-        ?></p>
+        ?>
         
     </body>
 </html>

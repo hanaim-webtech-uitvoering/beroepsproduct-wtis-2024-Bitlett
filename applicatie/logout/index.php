@@ -1,11 +1,11 @@
 <?php
 
 // Includes
-require "../common/auth.php";
-require "../common/redirect.php";
+require __DIR__ . "/../common/obj/Session.php";
+require __DIR__ . "/../common/func/redirect.php";
 
 // Log out
-logout();
+Session::get()->logout();
 
 // Back to home page
 redirect("/");

@@ -1,17 +1,11 @@
 <?php
 
 // Includes
-require_once "../common/auth.php";
-require_once "../common/redirect.php";
-
-// Make sure the user is even logged in
-if (!get_login_status()) redirect("/");
+require_once __DIR__ . "/../common/obj/Session.php";
+require_once __DIR__ . "/../common/func/redirect.php";
 
 // Delete the account
-delete_client($_SESSION["username"]);
-
-// Log out
-logout();
+Session::get()->delete_account();
 
 // Go back to the home page
 redirect("/");

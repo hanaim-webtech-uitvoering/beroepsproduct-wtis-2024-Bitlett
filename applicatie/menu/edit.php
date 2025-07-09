@@ -1,17 +1,17 @@
 <?php
 
 // Includes
-require_once "../common/cart.php";
-require_once "../common/redirect.php";
+require_once __DIR__ . "/../common/obj/Session.php";
+require_once __DIR__ . "/../common/func/redirect.php";
 
-// Do the thing (im tired okay give me a break)
-if (!isset($_GET["product_name"])) exit();
-if (!isset($_GET["action"])) exit();
+// Edit the cart
+$cart = &Session::get()->get_cart();
 
-if ($_GET["action"] == "add") add_cart_product($_GET["product_name"]);
-else if ($_GET["action"] == "remove") remove_cart_product($_GET["product_name"]);
+if ($_GET["action"] == "add") $cart->add($_GET["product_name"]);
+else if ($_GET["action"] == "remove") $cart->remove($_GET["product_name"]);
 
-redirect("/menu")
+// Go back to the menu
+redirect("/menu");
 
 ?>
 
