@@ -25,7 +25,6 @@ if ($_SERVER["REQUEST_METHOD"] != "GET") redirect("/");
 
         <?php
             $session = &Session::get();
-
             $user = isset($_GET["username"]) ? User::fetch_by_username($_GET["username"]) : $session->get_user();
             $is_profile_own = !isset($_GET["username"]) || (!is_null($session->get_user()) && User::fetch_by_username($_GET["username"]) == $session->get_user());
 
@@ -33,13 +32,11 @@ if ($_SERVER["REQUEST_METHOD"] != "GET") redirect("/");
             if (is_null($user)) {
                 if ($is_profile_own) echo("U bent uitgelogd. Klik <a href=\"/login\">hier</a> om in te loggen.");
                 else echo("Profiel niet gevonden.");
-                unset($session);
-                unset($user);
-                unset($is_profile_own);
             }
 
             else {
-                $can_view_private_data = $is_profile_own || (!is_null($session->get_user()) && $session->get_user()->get_role() == "Personnel");
+                $is_user_personnel = !is_null($session->get_user()) && $session->get_user()->get_role() == "Personnel";
+                $can_view_private_data = $is_profile_own || $is_user_personnel;
 
                 echo("<h2>Algemene Gegevens</h2>");
                 echo("<p>Naam: " . Session::sanitize_user_input($user->get_full_name()) . "</p>");
@@ -51,24 +48,56 @@ if ($_SERVER["REQUEST_METHOD"] != "GET") redirect("/");
                     if ($is_profile_own) {
                         foreach($session->get_errors() as $error) echo($error->get_element());
                         $session->clear_errors();
-                        echo("<form action=\"/profile/edit.php\" method=\"post\"> <label>Adres:</label> <input type=\"text\" name=\"address\" value=\"" . $clean_address . "\"> <input type=\"submit\" value=\"Aanpassen\"> </form><br><br>");
+                        echo("<form action=\"/profile/edit_address.php\" method=\"post\"> <label>Adres:</label> <input type=\"text\" name=\"address\" value=\"" . $clean_address . "\"> <input type=\"submit\" value=\"Aanpassen\"> </form><br><br>");
                         echo("<a href=\"/profile/delete.php\">Verwijder Account</a>");
                     } else echo("<label>Adres: " . $clean_address . "</label>");
+                    unset($clean_address);
 
                     echo("<h2>Bestellingen</h2>");
-                    echo("<table> <tr> <th>ID</th> <th>Ingrediënten</th> <th>Prijs</th> <th>Aantal</th> </tr>");
-
                     $orders = Order::fetch_by_username($user->get_username());
+                    if (count($orders) == 0) echo("U hebt geen bestellingen.");
+                    else {
+                        echo("<table> <tr> <th>ID</th> <th>Product(en)</th> <th>Klant</th> <th>Adres</th> <th>Datum en Tijd</th> <th>Personeel</th> <th>Status</th> </tr>");
 
-                    // foreach ($orders as $order) {
-                    //     echo("<p>");
-                    //     var_dump($order);
-                    //     echo("</p>");
-                    // }
+                        foreach ($orders as $order) {
+                            echo("<tr>");
 
-                    echo("</table>");
+                            echo("<td>" . $order->get_id() . "</td>");
+
+                            $products_string = "";
+                            foreach($order->get_product_orders() as $product_order) {
+                                if (!empty($products_string)) $products_string .= ", ";
+                                $products_string .= $product_order->get_quantity() . "x " . $product_order->get_product()->get_name();
+                            }
+                            echo("<td>" .  $products_string . "</td>");
+                            unset($products_string);
+
+                            if (is_null($order->get_client())) echo("<td> Onbekend </td>");
+                            else echo("<td><a href=\"/profile?username=" . Session::sanitize_user_input($order->get_client()->get_username()) . "\"> " . Session::sanitize_user_input($order->get_client()->get_username()) . "</a></td>");
+
+                            echo("<td>" . Session::sanitize_user_input($order->get_address()) . "</td>");
+
+                            echo("<td>" . date('Y/m/d H:i:s', $order->get_datetime()->getTimestamp()) . "</td>");
+
+                            echo("<td><a href=\"/profile?username=" . $order->get_personnel()->get_username() . "\"> " . $order->get_personnel()->get_username() . "</a></td>");
+
+                            echo("<td>" . $order->get_status()->to_string() . "</td>");
+
+                            echo("</tr>");
+                        }
+
+                        unset($orders);
+                        echo("</table>");
+                    }
                 }
+
+                unset($is_user_personnel);
+                unset($can_view_private_data);
             }
+
+            unset($session);
+            unset($user);
+            unset($is_profile_own);
         ?>
         
     </body>

@@ -56,6 +56,16 @@ class Order {
 	}
 
 
+	// Getters/setters
+	public function get_id(): int { return $this->id; }
+	public function get_client(): ?object { return $this->client; }
+	public function get_personnel(): object { return $this->personnel; }
+	public function get_datetime(): object { return $this->datetime; }
+	public function get_status(): OrderStatus { return $this->status; }
+	public function get_address(): string { return $this->address; }
+	public function get_product_orders(): array { return $this->product_orders; }
+	
+
 	// Variables
 	private int $id;
 	private ?object $client;
