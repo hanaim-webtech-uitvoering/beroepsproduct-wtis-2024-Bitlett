@@ -9,7 +9,8 @@
     </head>
     <body>
         <h1>Privacyverklaring</h1>
-        <?php require '../common/header.php' ?>
+        <?php require __DIR__ . '/../common/elem/header.php' ?>
+        
 		<p>Hier hoort een verplichte privacyverklaring te staan (GDPR)</p>
     </body>
 </html>
