@@ -1,7 +1,8 @@
 <?php
 
 // Includes
-require_once __DIR__ . "/../obj/Product.php";
+require_once __DIR__ . "/Product.php";
+require_once __DIR__ . "/../func/database.php";
 
 
 class ProductOrder {
@@ -11,6 +12,24 @@ class ProductOrder {
 		$this->product = $product;
 		$this->quantity = $quantity;
     }
+
+	public static function fetch_by_order_id(int $order_id): array {
+		$database_connection = get_database_connection();
+
+		$product_order_query = $database_connection->prepare("SELECT product_name, quantity FROM Pizza_Order_Product WHERE order_id = :order_id");
+		if ($product_order_query == FALSE) return [];
+
+		$product_order_query_status = $product_order_query->execute([":order_id" => $order_id]);
+		if ($product_order_query_status == FALSE) return [];
+
+		$product_orders = [];
+		while ($product_order_row = $product_order_query->fetch()) {
+			$product = Product::fetch_by_name($product_order_row["product_name"]);
+			$product_orders[count($product_orders)] = new ProductOrder($product, $product_order_row["quantity"]);
+		}
+
+		return $product_orders;
+	}
 
 
 	// Getters/setters

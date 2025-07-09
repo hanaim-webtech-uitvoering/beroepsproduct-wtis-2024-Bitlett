@@ -2,9 +2,9 @@
 
 // Includes
 require_once __DIR__ . "/../func/database.php";
-require_once __DIR__ . "/../obj/User.php";
-require_once __DIR__ . "/../obj/Cart.php";
-require_once __DIR__ . "/../obj/WebError.php";
+require_once __DIR__ . "/User.php";
+require_once __DIR__ . "/Cart.php";
+require_once __DIR__ . "/WebError.php";
 
 
 // Always have an active session
@@ -68,17 +68,6 @@ class Session {
 
 		$this->logout();
 		return NULL;
-	}
-
-
-	// Order functions
-	function place_order(): int {
-		$database_connection = get_database_connection();
-		$order_creation_query = $database_connection->prepare("INSERT INTO Pizza_Order (client_username, client_name, personnel_username, datetime, status, address) VALUES (:client_username, :client_name, :personnel_username, GETDATE(), 1, :address)");
-		$order_creation_query->execute(["client_username" => $username, ":client_name" => $full_name, ":personnel_username" => fetch_random_personnel_username(), ":address" => $address]);
-
-		$order_id_query = $database_connection->query("SELECT TOP 1 order_id FROM Pizza_Order ORDER BY datetime DESC");
-		return $order_id_query->fetch()["order_id"];
 	}
 
 

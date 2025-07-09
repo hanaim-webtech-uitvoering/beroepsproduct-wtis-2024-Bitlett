@@ -1,3 +1,10 @@
+<?php
+
+require_once __DIR__ . "/../common/obj/Order.php";
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -29,6 +36,13 @@
                 echo("<a href=\"/profile/delete.php\">Verwijder Account</a>");
 
                 echo("<h2>Mijn Bestellingen</h2>");
+                $orders = Order::fetch_by_username($user->get_username());
+
+                foreach ($orders as $order) {
+                    echo("<p>");
+                    var_dump($order);
+                    echo("</p>");
+                }
             }
         ?>
         
