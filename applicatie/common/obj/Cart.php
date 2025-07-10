@@ -24,7 +24,7 @@ class Cart {
 		$random_personnel_username = $random_personnel_query->fetch()["username"];
 
 		// Then create the order
-		$order_creation_query = $database_connection->prepare("INSERT INTO Pizza_Order (client_username, client_name, personnel_username, datetime, status, address) VALUES (:client_username, :client_name, :personnel_username, GETDATE(), 1, :address)");
+		$order_creation_query = $database_connection->prepare("INSERT INTO Pizza_Order (client_username, client_name, personnel_username, datetime, status, address) VALUES (:client_username, :client_name, :personnel_username, GETDATE(), 0, :address)");
 		if ($order_creation_query == FALSE) return "Bestelling prepared statement maken mislukt!";
 		
 		$order_creation_status = $order_creation_query->execute(["client_username" => $username, ":client_name" => $full_name, ":personnel_username" => $random_personnel_username, ":address" => $address]);
