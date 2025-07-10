@@ -81,7 +81,18 @@ if ($_SERVER["REQUEST_METHOD"] != "GET") redirect("/");
 
                             echo("<td><a href=\"/profile?username=" . $order->get_personnel()->get_username() . "\"> " . $order->get_personnel()->get_username() . "</a></td>");
 
-                            echo("<td>" . $order->get_status()->to_string() . "</td>");
+                            if ($order->get_personnel() == $session->get_user()) {
+                                echo("<td> <form action=\"/profile/edit_order.php\" method=\"post\">");
+                                echo("<input type=\"hidden\" name=\"order_id\" value=\"" . $order->get_id() . "\">");
+                                echo("<select name=\"status\">");
+                                echo("<option value=\"" . OrderStatus::Pending->to_string() . "\"" . ($order->get_status() == OrderStatus::Pending ? " selected" : "") . ">" . OrderStatus::Pending->to_string() . "</option>");
+                                echo("<option value=\"" . OrderStatus::InProduction->to_string() . "\"" . ($order->get_status() == OrderStatus::InProduction ? " selected" : "") . ">" . OrderStatus::InProduction->to_string() . "</option>");
+                                echo("<option value=\"" . OrderStatus::Underway->to_string() . "\"" . ($order->get_status() == OrderStatus::Underway ? " selected" : "") . ">" . OrderStatus::Underway->to_string() . "</option>");
+                                echo("<option value=\"" . OrderStatus::Complete->to_string() . "\"" . ($order->get_status() == OrderStatus::Complete ? " selected" : "") . ">" . OrderStatus::Complete->to_string() . "</option>");
+                                echo("</select> ");
+                                echo("<input type=\"submit\" value=\"Aanpassen\">");
+                                echo("</form> </td>");
+                            } else echo("<td>" . $order->get_status()->to_string() . "</td>");
 
                             echo("</tr>");
                         }

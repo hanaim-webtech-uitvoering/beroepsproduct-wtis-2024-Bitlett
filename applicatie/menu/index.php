@@ -24,7 +24,7 @@
 
 			foreach ($products_by_type_id as $type_id => $products) {
 				echo("<h2>" . $type_id . "</h2>");
-				echo("<table> <tr> <th>Product</th> <th>Ingrediënten</th> <th>Prijs</th> <th>Aantal</th> </tr>")
+				echo("<table> <tr> <th>Product</th> <th>Ingrediënten</th> <th>Prijs</th> <th>Aantal</th> </tr>");
 
 				foreach ($products as $product) {
 					$ingredients_string = "";
@@ -43,7 +43,7 @@
 					echo("<a href=\"/menu/edit.php?origin=/menu&product_name=" . $product->get_name() . "&action=remove\">-</a> ");
 					echo(Session::get()->get_cart()->get_product_quantity($product));
 					echo(" <a href=\"/menu/edit.php?origin=/menu&product_name=" . $product->get_name() . "&action=add\">+</a>");
-					echo("</td>")
+					echo("</td>");
 
 					echo("</tr>");
 				}

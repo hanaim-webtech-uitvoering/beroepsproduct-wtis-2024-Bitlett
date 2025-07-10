@@ -58,11 +58,28 @@ class Order {
 
 	// Getters/setters
 	public function get_id(): int { return $this->id; }
+
 	public function get_client(): ?object { return $this->client; }
+
 	public function get_personnel(): object { return $this->personnel; }
+
 	public function get_datetime(): object { return $this->datetime; }
+
 	public function get_status(): OrderStatus { return $this->status; }
+	public function set_status(OrderStatus $status): void {
+		$database_connection = get_database_connection();
+
+		$order_update_query = $database_connection->prepare("UPDATE Pizza_Order SET status = :status WHERE order_id = :order_id");
+		if ($order_update_query == FALSE) return;
+
+		$order_update_status = $order_update_query->execute([":status" => $status->to_int(), ":order_id" => $this->id]);
+		if ($order_update_status == FALSE) return;
+
+		$this->status = $status;
+	}
+
 	public function get_address(): string { return $this->address; }
+
 	public function get_product_orders(): array { return $this->product_orders; }
 	
 
