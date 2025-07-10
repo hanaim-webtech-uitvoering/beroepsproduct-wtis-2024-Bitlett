@@ -53,10 +53,6 @@ class Session {
 		return NULL;
 	}
 
-	public function debug_login(string $username): void {
-		$this->user = User::fetch_by_username($username);
-	}
-
 	public function logout(): void { $this->user = NULL; }
 
 	public function delete_account(): ?string {
