@@ -64,11 +64,17 @@ class Session {
 
 		$database_connection = get_database_connection();
 
+		$order_edit_query = $database_connection->prepare("UPDATE \"Pizza_Order\" SET client_username = NULL WHERE client_username = :username");
+		if ($order_edit_query == FALSE) return "Bestelling prepared statement aanmaken mislukt!";
+
+		$order_edit_status = $order_edit_query->execute([":username" => $this->user->get_username()]);
+		if ($order_edit_status == FALSE) return "Bestelling prepared statement uitvoeren mislukt!";
+
 		$delete_query = $database_connection->prepare("DELETE FROM \"User\" WHERE username = :username");
-		if ($delete_query == FALSE) return "Prepared statement aanmaken mislukt!";
+		if ($delete_query == FALSE) return "Account prepared statement aanmaken mislukt!";
 
 		$delete_status = $delete_query->execute([":username" => $this->user->get_username()]);
-		if ($delete_status == FALSE) return "Prepared statement uitvoeren mislukt!";
+		if ($delete_status == FALSE) return "Account prepared statement uitvoeren mislukt!";
 
 		$this->logout();
 		return NULL;
